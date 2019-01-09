@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const userDb = require('../data/helpers/userDb.js');
 
 
 const server = express();
@@ -20,8 +21,18 @@ function doubler(req, res, next) {
 }
 
 // routes
-server.get('/', (req, res) => {
-    res.send('server alive');
-});
+// server.get('/', (req, res) => {
+//     res.send('server alive');
+// });
+
+server.get('/users', (req, res) => {
+    userDb.get()
+    .then(users => {
+        res.status(200).send({ users });
+    })
+    .catch(err => {
+        res.send(500).send({ error: "The users could not be retrieved." })
+    })
+})
 
 module.exports = server;
