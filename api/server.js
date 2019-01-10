@@ -2,6 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const userDb = require("../data/helpers/userDb.js");
 const postsRouter = require("../postsRoute/postsRouter");
+const tagsRouter = require('../tagsRoute/tagsRouter');
 
 const server = express();
 
@@ -10,6 +11,7 @@ const server = express();
 server.use(express.json()); //built-in
 server.use(morgan("short")); // logging middleware
 server.use("/posts", postsRouter);
+server.use('/tags', tagsRouter);
 
 function makeCapital(req, res, next) {
   let name = req.body.name;

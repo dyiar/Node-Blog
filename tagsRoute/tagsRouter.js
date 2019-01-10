@@ -1,27 +1,28 @@
 const express = require("express");
-const postsdb = require("../data/helpers/postDb");
+const tagsdb = require("../data/helpers/tagDb");
 
 const router = express.Router();
 
-//middleware
+// middleware
 
 function checkIdExists(req, res, next) {
   const id = req.params.id;
-  postsdb.get(id).then(user => {
+  tagsdb.get(id).then(user => {
     if (user) {
       next();
     } else {
-      res.status(404).send({ error: "The user doesn't exist." });
+      res.status(404).send({ error: "The ID doesn't exist." });
     }
   });
 }
 
 //endpoints
+
 router.get("/", (req, res) => {
-  postsdb
+  tagsdb
     .get()
-    .then(post => {
-      res.status(200).send({ post });
+    .then(tag => {
+      res.status(200).send({ tag });
     })
     .catch(() =>
       res.status(500).send({ error: "The posts could not be retrieved." })
@@ -31,11 +32,11 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   const id = req.params.id;
 
-  postsdb
+  tagsdb
     .get(id)
-    .then(post => {
-      if (post) {
-        res.status(200).send({ post });
+    .then(tag => {
+      if (tag) {
+        res.status(200).send({ tag });
       } else {
         res.status(404).send({ error: "The ID doesn't exist." });
       }
@@ -46,15 +47,15 @@ router.get("/:id", (req, res) => {
 });
 
 router.post("/create", (req, res) => {
-  const postInfo = req.body;
+  const tagInfo = req.body;
 
-  postsdb
-    .insert(postInfo)
+  tagsdb
+    .insert(tagInfo)
     .then(result => {
-      postsdb
+      tagsdb
         .get(result.id)
-        .then(post => {
-          res.status(201).send({ post });
+        .then(tag => {
+          res.status(201).send({ tag });
         })
         .catch(() =>
           res.status(400).send({
@@ -71,10 +72,10 @@ router.post("/create", (req, res) => {
 
 router.put("/:id", checkIdExists, (req, res) => {
   const id = req.params.id;
-  const postChange = req.body;
+  const tagChange = req.body;
 
-  postsdb
-    .update(id, postChange)
+  tagsdb
+    .update(id, tagChange)
     .then(() => res.status(200).send("1"))
     .catch(() =>
       res
@@ -87,25 +88,14 @@ router.put("/:id", checkIdExists, (req, res) => {
 });
 
 router.delete("/:id", checkIdExists, (req, res) => {
-  const id = req.params.id;
-
-  postsdb
-    .remove(id)
-    .then(() => res.status(200).send({ deleted: "Post has been deleted." }))
-    .catch(() =>
-      res.status(500).send({ error: "The post could not be deleted." })
-    );
-});
-
-router.get("/:id/tags", checkIdExists, (req, res) => {
-  const id = req.params.id;
-
-  postsdb
-    .getPostTags(id)
-    .then(result => res.status(200).send({ result }))
-    .catch(() =>
-      res.status(500).send({ error: "The tags could not be retrieved." })
-    );
-});
+    const id = req.params.id;
+  
+    tagsdb
+      .remove(id)
+      .then(() => res.status(200).send({ deleted: "Tag has been deleted." }))
+      .catch(() =>
+        res.status(500).send({ error: "The tag could not be deleted." })
+      );
+  });
 
 module.exports = router;
