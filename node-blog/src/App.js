@@ -4,6 +4,7 @@ import { Route } from 'react-router-dom';
 
 import Users from './Components/users';
 import User from './Components/user';
+import Posts from './Components/posts';
 import './App.css';
 
 class App extends Component {
@@ -11,7 +12,8 @@ class App extends Component {
     super(props);
     this.state= {
       users: [],
-      user: []
+      user: [],
+      posts: []
     }
   }
 
@@ -33,6 +35,15 @@ class App extends Component {
     .catch(() => console.log('error!'))
   }
 
+  getPosts = id => {
+    axios.get(`http://localhost:5000/users/posts/${id}`)
+    .then(response => {
+      this.setState(() => ({ posts: response.data.posts }))
+    })
+    .catch(() => console.log('error getting posts'))
+
+  }
+
   render() {
     return (
       <div className="App">
@@ -44,7 +55,13 @@ class App extends Component {
         />
         <Route path='/users/:id' render={props => (
           <User {...props}
-          user={this.state.user} />
+          user={this.state.user}
+          getPosts={this.getPosts} />
+        )}
+        />
+        <Route path='/users/posts/:id' render={props => (
+          <Posts {...props}
+          posts={this.state.posts} />
         )}
         />
       </div>

@@ -1,5 +1,4 @@
 import React from 'react';
-import User from './user';
 import { Link } from 'react-router-dom';
 
 const Users = props => {
