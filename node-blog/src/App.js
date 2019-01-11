@@ -11,6 +11,7 @@ class App extends Component {
     super(props);
     this.state= {
       users: [],
+      user: []
     }
   }
 
@@ -24,16 +25,26 @@ class App extends Component {
     .catch(() => console.log("error!"))
   }
 
+  getUser = id => {
+    axios.get(`http://localhost:5000/users/${id}`)
+    .then(response => {
+      this.setState(() => ({ user: response.data.user }))
+    })
+    .catch(() => console.log('error!'))
+  }
+
   render() {
     return (
       <div className="App">
         <Route exact path='/users' render={props => (
           <Users {...props} 
-          users={this.state.users}/>
+          users={this.state.users}
+          getUser={this.getUser}/>
         )}
         />
         <Route path='/users/:id' render={props => (
-          <User {...props} />
+          <User {...props}
+          user={this.state.user} />
         )}
         />
       </div>

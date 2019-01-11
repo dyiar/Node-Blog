@@ -7,10 +7,11 @@ const Users = props => {
         <div>
             {props.users.map(user => {
                 return (
-                    <Link to={`/users/${user.id}`} key={user.id}>
-                    <User 
-                    user={user}
-                    name={user.name}/>
+                    <Link to={`/users/${user.id}`} key={user.id}
+                    onClick={() => props.getUser(user.id)}>
+                    <div>
+                        {user.name}
+                    </div>
                     </Link>
                 )
             })}
