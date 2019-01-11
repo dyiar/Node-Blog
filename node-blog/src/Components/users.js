@@ -9,7 +9,7 @@ const Users = props => {
                 return (
                     <Link to={`/users/${user.id}`} key={user.id}
                     onClick={() => props.getUser(user.id)}>
-                    <div>
+                    <div className="name-list">
                         {user.name}
                     </div>
                     </Link>
